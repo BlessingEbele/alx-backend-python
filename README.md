@@ -76,6 +76,54 @@ Populates it from a CSV file
 
 Streams rows one-by-one using a generator function (in the next task)
 
+`````
+# 🌀 Python Generators with SQL Integration
+
+This directory contains Python scripts that demonstrate **advanced usage of generator functions** for efficient, memory-safe data processing using **SQL databases**.
+
+It is part of the **ALX Backend Python** project series.
+
+---
+
+## 📚 Learning Objectives
+
+By completing this module, you will:
+
+- ✅ Use Python generator functions with `yield` to iterate through large datasets
+- ✅ Stream SQL rows efficiently, row-by-row, using a single loop
+- ✅ Create a reusable database seeding pipeline using CSV
+- ✅ Combine Python with SQL for real-world backend data handling
+
+---
+
+## 📁 Files in this Directory
+
+| File Name              | Description |
+|------------------------|-------------|
+| `0-main.py`            | Test script to validate DB seeding and basic SELECT query |
+| `seed.py`              | Seeds the `ALX_prodev` MySQL database with `user_data.csv` |
+| `user_data.csv`        | Sample dataset used to populate `user_data` table |
+| `1-main.py`            | Script to test generator-based row streaming |
+| `0-stream_users.py`    | Contains the generator `stream_users()` to stream one row at a time |
+| `README.md`            | This file |
+
+---
+
+## ✅ Task 0: Database Seeding Script
+
+**Goal**: Set up the database, table, and populate it with user data from a CSV file.
+
+**Main Script**: `seed.py`
+
+### Key Functions:
+```python
+def connect_db()
+def create_database(connection)
+def connect_to_prodev()
+def create_table(connection)
+def insert_data(connection, csv_file)
+`````
+
 ✍️ Author
 Blessing Ebele Anochili
 Backend Developer | Python Enthusiast | ALX SE Program
