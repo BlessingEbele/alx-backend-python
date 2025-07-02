@@ -1,5 +1,4 @@
 # alx-backend-python
-README.md (for this task)
 
 # 📊 Task 0: Getting Started with Python Generators and SQL Integration
 
