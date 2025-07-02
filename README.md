@@ -93,6 +93,7 @@ By completing this module, you will:
 - ✅ Stream SQL rows efficiently, row-by-row or in batches
 - ✅ Handle large data without memory overload
 - ✅ Process batches with filtering logic
+- ✅ Implement lazy loading and pagination
 - ✅ Seed SQL databases from CSV
 - ✅ Combine Python with MySQL for real-world backend use cases
 
@@ -109,6 +110,8 @@ By completing this module, you will:
 | `0-stream_users.py`    | Streams rows one at a time using generator |
 | `2-main.py`            | Tests batch streaming & filtering from `1-batch_processing.py` |
 | `1-batch_processing.py`| Streams user data in batches & filters for users older than 25 |
+| `3-main.py`            | Tests paginated lazy-loading from `2-lazy_paginate.py` |
+| `2-lazy_paginate.py`   | Implements lazy pagination with generator and LIMIT/OFFSET |
 | `README.md`            | This file |
 
 ---
@@ -119,41 +122,45 @@ By completing this module, you will:
 
 **Script:** `seed.py`
 
+---
+
+## ✅ Task 1: Stream SQL Rows One-by-One
+
+**Goal:** Use a generator to lazily stream individual user rows from the `user_data` table.
+
+**Script:** `0-stream_users.py`
+
+---
+
+## ✅ Task 2: Batch Processing with Generators
+
+**Goal:** Use a generator to process user records in **batches**, filtering for users **over age 25**.
+
+**Script:** `1-batch_processing.py`
+
+---
+
+## ✅ Task 3: Lazy Loading Paginated Data
+
+**Goal:** Simulate paginated data access using generators that fetch one page of records at a time on demand.
+
+**Script:** `2-lazy_paginate.py`  
+**Tested with:** `3-main.py`
+
 ### Functions:
 ```python
-def connect_db()
-def create_database(connection)
-def connect_to_prodev()
-def create_table(connection)
-def insert_data(connection, csv_file)
-✅ Task 1: Stream SQL Rows One-by-One
-Goal: Use a generator to lazily stream individual user rows from the user_data table.
-
-Script: 0-stream_users.py
-Tested with: 1-main.py
-
-Function:
-python
-def stream_users()
-✅ Task 2: Batch Processing with Generators
-Goal: Use generator to process user records in batches, then filter and print only users over the age of 25.
-
-Script: 1-batch_processing.py
-Tested with: 2-main.py
-
-Functions:
-python
-def stream_users_in_batches(batch_size)
-def batch_processing(batch_size)
-
+def paginate_users(page_size, offset)
+def lazy_pagination(page_size)
 Sample Output:
 bash
+Copy
+Edit
 {'user_id': '00234e...', 'name': 'Dan Altenwerth Jr.', 'age': 67}
 {'user_id': '006bfede...', 'name': 'Glenda Wisozk', 'age': 119}
 ...
-✅ Memory Efficient
-✅ Processes data in chunks
-✅ Only 3 loops used
+✅ Efficient use of LIMIT and OFFSET
+✅ Only loads next page when needed
+✅ Uses just one loop
 
 
 `````
