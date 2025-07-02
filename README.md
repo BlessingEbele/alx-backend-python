@@ -122,6 +122,33 @@ def create_database(connection)
 def connect_to_prodev()
 def create_table(connection)
 def insert_data(connection, csv_file)
+
+✅ Task 1: Stream SQL Rows Using a Generator
+Goal: Use Python's yield to fetch rows from MySQL one by one using a single loop.
+
+Main File: 0-stream_users.py
+Test File: 1-main.py
+
+Function Signature:
+python
+def stream_users()
+
+Sample Output:
+bash
+{'user_id': '00234e...', 'name': 'Dan Altenwerth Jr.', 'email': 'Molly59@gmail.com', 'age': 67}
+{'user_id': '006bfe...', 'name': 'Glenda Wisozk', 'email': 'Miriam21@gmail.com', 'age': 119}
+...
+⚙️ How to Run
+Ensure MySQL is running and you’ve updated your credentials in seed.py and 0-stream_users.py.
+
+Seed the database:
+
+bash
+$ ./0-main.py
+Test streaming rows using the generator:
+
+bash
+$ ./1-main.py
 `````
 
 ✍️ Author
