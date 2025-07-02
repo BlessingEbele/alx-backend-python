@@ -90,9 +90,11 @@ It is part of the **ALX Backend Python** project series.
 By completing this module, you will:
 
 - ✅ Use Python generator functions with `yield` to iterate through large datasets
-- ✅ Stream SQL rows efficiently, row-by-row, using a single loop
-- ✅ Create a reusable database seeding pipeline using CSV
-- ✅ Combine Python with SQL for real-world backend data handling
+- ✅ Stream SQL rows efficiently, row-by-row or in batches
+- ✅ Handle large data without memory overload
+- ✅ Process batches with filtering logic
+- ✅ Seed SQL databases from CSV
+- ✅ Combine Python with MySQL for real-world backend use cases
 
 ---
 
@@ -100,55 +102,60 @@ By completing this module, you will:
 
 | File Name              | Description |
 |------------------------|-------------|
-| `0-main.py`            | Test script to validate DB seeding and basic SELECT query |
-| `seed.py`              | Seeds the `ALX_prodev` MySQL database with `user_data.csv` |
-| `user_data.csv`        | Sample dataset used to populate `user_data` table |
-| `1-main.py`            | Script to test generator-based row streaming |
-| `0-stream_users.py`    | Contains the generator `stream_users()` to stream one row at a time |
+| `0-main.py`            | Script to test DB creation and seeding |
+| `seed.py`              | Creates MySQL DB (`ALX_prodev`), `user_data` table, and seeds from CSV |
+| `user_data.csv`        | Sample dataset with user information |
+| `1-main.py`            | Test script to print rows using generator from `0-stream_users.py` |
+| `0-stream_users.py`    | Streams rows one at a time using generator |
+| `2-main.py`            | Tests batch streaming & filtering from `1-batch_processing.py` |
+| `1-batch_processing.py`| Streams user data in batches & filters for users older than 25 |
 | `README.md`            | This file |
 
 ---
 
-## ✅ Task 0: Database Seeding Script
+## ✅ Task 0: Seed MySQL Database
 
-**Goal**: Set up the database, table, and populate it with user data from a CSV file.
+**Goal:** Create `ALX_prodev` DB and populate `user_data` table using `user_data.csv`.
 
-**Main Script**: `seed.py`
+**Script:** `seed.py`
 
-### Key Functions:
+### Functions:
 ```python
 def connect_db()
 def create_database(connection)
 def connect_to_prodev()
 def create_table(connection)
 def insert_data(connection, csv_file)
+✅ Task 1: Stream SQL Rows One-by-One
+Goal: Use a generator to lazily stream individual user rows from the user_data table.
 
-✅ Task 1: Stream SQL Rows Using a Generator
-Goal: Use Python's yield to fetch rows from MySQL one by one using a single loop.
+Script: 0-stream_users.py
+Tested with: 1-main.py
 
-Main File: 0-stream_users.py
-Test File: 1-main.py
-
-Function Signature:
+Function:
 python
 def stream_users()
+✅ Task 2: Batch Processing with Generators
+Goal: Use generator to process user records in batches, then filter and print only users over the age of 25.
+
+Script: 1-batch_processing.py
+Tested with: 2-main.py
+
+Functions:
+python
+def stream_users_in_batches(batch_size)
+def batch_processing(batch_size)
 
 Sample Output:
 bash
-{'user_id': '00234e...', 'name': 'Dan Altenwerth Jr.', 'email': 'Molly59@gmail.com', 'age': 67}
-{'user_id': '006bfe...', 'name': 'Glenda Wisozk', 'email': 'Miriam21@gmail.com', 'age': 119}
+{'user_id': '00234e...', 'name': 'Dan Altenwerth Jr.', 'age': 67}
+{'user_id': '006bfede...', 'name': 'Glenda Wisozk', 'age': 119}
 ...
-⚙️ How to Run
-Ensure MySQL is running and you’ve updated your credentials in seed.py and 0-stream_users.py.
+✅ Memory Efficient
+✅ Processes data in chunks
+✅ Only 3 loops used
 
-Seed the database:
 
-bash
-$ ./0-main.py
-Test streaming rows using the generator:
-
-bash
-$ ./1-main.py
 `````
 
 ✍️ Author
