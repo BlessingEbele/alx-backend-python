@@ -212,14 +212,65 @@ csharp
 Traceback (most recent call last):
 ...
 
+🧠 Task 4: Cache Database Queries
+🎯 Objective:
+Implement a @cache_query decorator that stores the result of a SQL query, preventing redundant database calls and improving performance for frequently repeated queries.
+
+🧠 Concepts Used:
+Python function memoization
+
+Custom caching with in-memory dictionary
+
+Query-based cache key
+
+Stacking with other decorators
+
+💡 Key Features:
+Caches results based on the SQL query string.
+
+Prevents re-executing the same query if already cached.
+
+Works seamlessly with @with_db_connection.
+
+✅ Sample Code:
+python
+
+query_cache = {}
+
+def cache_query(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        query = kwargs.get('query') or (args[1] if len(args) > 1 else None)
+        if query in query_cache:
+            print("[CACHE] Returning cached result.")
+            return query_cache[query]
+        print("[CACHE] Executing and caching result.")
+        result = func(*args, **kwargs)
+        query_cache[query] = result
+        return result
+    return wrapper
+
+@with_db_connection
+@cache_query
+def fetch_users_with_cache(conn, query):
+    cursor = conn.cursor()
+    cursor.execute(query)
+    return cursor.fetchall()
+🧪 Sample Output:
+csharp
+
+[CACHE] Executing and caching result.
+[CACHE] Returning cached result.
+
 🔁 Directory Structure
-📂 Project Structure
+📂 Final Project Structure
 
 python-decorators-0x01/
 ├── 0-log_queries.py
 ├── 1-with_db_connection.py
 ├── 2-transactional.py
 ├── 3-retry_on_failure.py
+├── 4-cache_query.py
 ├── README.md
 └── users.db
 
