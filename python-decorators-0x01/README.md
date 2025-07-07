@@ -97,10 +97,71 @@ bash
 
 ('001', 'Blessing Anochili', 'blessing@example.com', 30)
 
+🧾 Task 2: Transaction Management Decorator
+🎯 Objective:
+Create a @transactional decorator to wrap database operations inside a transaction. It should:
+
+Commit changes when successful
+
+Rollback if an error occurs
+
+This ensures atomicity and protects data integrity during database updates.
+
+🔧 Decorator Stack:
+The function uses two decorators:
+
+@with_db_connection: Handles opening/closing DB connections.
+
+@transactional: Manages commit/rollback logic.
+
+🧠 Concepts Used:
+Python decorators
+
+Error handling with try/except
+
+SQLite transaction management
+
+Decorator stacking
+
+✅ Sample Code:
+python
+
+def transactional(func):
+    @functools.wraps(func)
+    def wrapper(conn, *args, **kwargs):
+        try:
+            result = func(conn, *args, **kwargs)
+            conn.commit()
+            print("[TRANSACTION] Committed successfully.")
+            return result
+        except Exception as e:
+            conn.rollback()
+            print(f"[TRANSACTION] Rolled back due to error: {e}")
+            raise
+    return wrapper
+
+@with_db_connection
+@transactional
+def update_user_email(conn, user_id, new_email):
+    cursor = conn.cursor()
+    cursor.execute("UPDATE users SET email = ? WHERE id = ?", (new_email, user_id))
+✅ Sample Output:
+pgsql
+
+[TRANSACTION] Committed successfully.
+Or, on failure:
+
+pgsql
+
+[TRANSACTION] Rolled back due to error: no such column: email_address
+
 🔁 Directory Structure
+📂 Project Structure
 
 python-decorators-0x01/
 ├── 0-log_queries.py
 ├── 1-with_db_connection.py
+├── 2-transactional.py
 ├── README.md
 └── users.db
+
