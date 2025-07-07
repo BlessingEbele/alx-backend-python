@@ -155,6 +155,63 @@ pgsql
 
 [TRANSACTION] Rolled back due to error: no such column: email_address
 
+
+🔄 Task 3: Retry Database Queries
+🎯 Objective:
+Create a @retry_on_failure decorator that retries a database operation a set number of times if it fails due to an exception.
+
+🧠 Concepts Used:
+Python decorators with parameters
+
+Retry logic
+
+Exception handling and logging
+
+Combining decorators (@with_db_connection + @retry_on_failure)
+
+🧪 Parameters:
+retries: Maximum number of retry attempts (default: 3)
+
+delay: Seconds to wait between retries (default: 2)
+
+✅ Sample Code:
+python
+
+def retry_on_failure(retries=3, delay=2):
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            attempt = 0
+            while attempt < retries:
+                try:
+                    return func(*args, **kwargs)
+                except Exception as e:
+                    attempt += 1
+                    print(f"[RETRY] Attempt {attempt} failed due to: {e}")
+                    if attempt < retries:
+                        time.sleep(delay)
+                    else:
+                        print("[RETRY] All retry attempts failed.")
+                        raise
+        return wrapper
+    return decorator
+
+@with_db_connection
+@retry_on_failure(retries=3, delay=1)
+def fetch_users_with_retry(conn):
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM users")
+    return cursor.fetchall()
+🧪 Sample Output (Simulated Failure):
+csharp
+
+[RETRY] Attempt 1 failed due to: database is locked
+[RETRY] Attempt 2 failed due to: database is locked
+[RETRY] Attempt 3 failed due to: database is locked
+[RETRY] All retry attempts failed.
+Traceback (most recent call last):
+...
+
 🔁 Directory Structure
 📂 Project Structure
 
@@ -162,6 +219,8 @@ python-decorators-0x01/
 ├── 0-log_queries.py
 ├── 1-with_db_connection.py
 ├── 2-transactional.py
+├── 3-retry_on_failure.py
 ├── README.md
 └── users.db
+
 
