@@ -97,7 +97,6 @@ bash
 
 ('001', 'Blessing Anochili', 'blessing@example.com', 30)
 
-
 🔁 Directory Structure
 
 python-decorators-0x01/
