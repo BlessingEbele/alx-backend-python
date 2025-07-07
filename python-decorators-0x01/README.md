@@ -49,9 +49,59 @@ def fetch_all_users(query):
 
 [2025-06-30 15:24:10] Executing SQL Query: SELECT * FROM users
 [('001', 'Blessing Anochili', 'blessing@example.com', 30), ...]
+
+
+🧩 Task 1: Handle Database Connections with a Decorator
+🎯 Objective:
+Implement a decorator with_db_connection that automatically manages opening and closing of a SQLite database connection.
+
+💡 Key Features:
+Removes boilerplate connection handling.
+
+Injects the connection (conn) into the decorated function.
+
+Ensures proper cleanup using try...finally.
+
+🧠 Concepts Used:
+Python decorators
+
+functools.wraps
+
+Resource management with try...finally
+
+SQLite connection injection
+
+✅ Sample Code:
+python
+import sqlite3
+import functools
+
+def with_db_connection(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        conn = sqlite3.connect('users.db')
+        try:
+            result = func(conn, *args, **kwargs)
+            return result
+        finally:
+            conn.close()
+    return wrapper
+
+@with_db_connection
+def get_user_by_id(conn, user_id):
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM users WHERE id = ?", (user_id,))
+    return cursor.fetchone()
+✅ Sample Output:
+bash
+
+('001', 'Blessing Anochili', 'blessing@example.com', 30)
+
+
 🔁 Directory Structure
 
 python-decorators-0x01/
 ├── 0-log_queries.py
+├── 1-with_db_connection.py
 ├── README.md
-└── users.db  (optional for testing)
+└── users.db
