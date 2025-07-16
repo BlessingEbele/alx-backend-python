@@ -3,7 +3,7 @@
 """
 
 from typing import List, Dict
-from my_utils import get_json, access_nested_map, memoize
+from utils import get_json, access_nested_map, memoize
 
 
 class GithubOrgClient:
