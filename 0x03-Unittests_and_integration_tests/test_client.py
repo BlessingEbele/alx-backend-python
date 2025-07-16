@@ -14,7 +14,7 @@ class TestGithubOrgClient(unittest.TestCase):
         ("google",),
         ("abc",),
     ])
-    @patch("src.client.get_json")
+    @patch("client.get_json")
     def test_org(
         self,
         org_name: str,
