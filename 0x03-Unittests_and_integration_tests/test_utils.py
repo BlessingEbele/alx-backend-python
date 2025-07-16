@@ -5,7 +5,7 @@ import unittest
 import utils
 from parameterized import parameterized
 from unittest.mock import patch, Mock
-from utils import access_nested_map, get_json, memoize
+from my_utils import access_nested_map, get_json, memoize
 
 
 class TestAccessNestedMap(unittest.TestCase):
