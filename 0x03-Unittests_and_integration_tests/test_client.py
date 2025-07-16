@@ -27,7 +27,8 @@ class TestGithubOrgClient(unittest.TestCase):
         result = client.org
 
         self.assertEqual(result, expected_payload)
-        mock_get_json.assert_called_once_with(f"https://api.github.com/orgs/{org_name}")
+        mock_get_json.assert_called_once_with(
+            f"https://api.github.com/orgs/{org_name}")
 from unittest.mock import patch, PropertyMock  # Already likely imported
 
 
@@ -51,10 +52,12 @@ class TestGithubOrgClient(unittest.TestCase):
         result = client.org
 
         self.assertEqual(result, expected_payload)
-        mock_get_json.assert_called_once_with(f"https://api.github.com/orgs/{org_name}")
+        mock_get_json.assert_called_once_with(
+            f"https://api.github.com/orgs/{org_name}")
 
     def test_public_repos_url(self):
-        """Test that _public_repos_url returns the correct URL based on mocked org."""
+        """Test that _public_repos_url returns 
+        the correct URL based on mocked org."""
         test_url = "https://api.github.com/orgs/test-org/repos"
 
         with patch.object(
@@ -67,7 +70,8 @@ class TestGithubOrgClient(unittest.TestCase):
             self.assertEqual(client._public_repos_url, test_url)
     @patch("client.get_json")
     def test_public_repos(self, mock_get_json):
-        """Test that public_repos returns correct list and mocks are called."""
+        """Test that public_repos returns
+          correct list and mocks are called."""
         test_url = "https://api.github.com/orgs/test-org/repos"
         mock_payload = [
             {"name": "repo1"},
