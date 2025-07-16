@@ -40,6 +40,7 @@ class TestAccessNestedMap(unittest.TestCase):
             access_nested_map(nested_map, path)
         self.assertEqual(str(cm.exception), repr(path[-1]))
 #cla
+#!/usr/bin/env python3
 """
 Test utils module
 """
@@ -58,28 +59,29 @@ class TestGetJson(unittest.TestCase):
     ])
     def test_get_json(self, test_url, test_payload):
         """Test that utils.get_json returns expected result"""
-        
+
         # Create a mock response object
         mock_response = Mock()
         mock_response.json.return_value = test_payload
-        
+
         # Patch requests.get to return our mock response
         with patch('requests.get', return_value=mock_response) as mock_get:
             # Call the function we're testing
             result = utils.get_json(test_url)
-            
+
             # Assert that requests.get was called exactly once with test_url
             mock_get.assert_called_once_with(test_url)
-            
+
             # Assert that the result equals the expected payload
             self.assertEqual(result, test_payload)
-#another
+
+
 class TestMemoize(unittest.TestCase):
     """Test class for utils.memoize decorator"""
 
     def test_memoize(self):
         """Test that memoize decorator caches method calls"""
-        
+
         class TestClass:
             def a_method(self):
                 return 42
@@ -87,20 +89,21 @@ class TestMemoize(unittest.TestCase):
             @utils.memoize
             def a_property(self):
                 return self.a_method()
-        
+
         # Create an instance of TestClass
         test_instance = TestClass()
-        
+
         # Patch the a_method to track calls
-        with patch.object(test_instance, 'a_method', return_value=42) as mock_method:
+        with patch.object(test_instance, 'a_method',
+                          return_value=42) as mock_method:
             # Call a_property twice
             result1 = test_instance.a_property
             result2 = test_instance.a_property
-            
+
             # Assert that both calls return the correct result
             self.assertEqual(result1, 42)
             self.assertEqual(result2, 42)
-            
+
             # Assert that a_method was called only once due to memoization
             mock_method.assert_called_once()
 
