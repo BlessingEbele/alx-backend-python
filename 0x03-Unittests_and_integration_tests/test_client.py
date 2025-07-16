@@ -3,8 +3,10 @@
 
 import unittest
 from unittest.mock import patch
-from parameterized import parameterized
+from parameterized import parameterized, parameterized_class
 from client import GithubOrgClient
+from fixtures import TEST_PAYLOAD
+import requests
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -98,3 +100,47 @@ class TestGithubOrgClient(unittest.TestCase):
         """Test that has_license returns True only when license matches."""
         result = GithubOrgClient.has_license(repo, license_key)
         self.assertEqual(result, expected)
+class MockResponse:
+    """Mock response for requests.get().json()."""
+    def __init__(self, payload):
+        self._payload = payload
+
+    def json(self):
+        return self._payload
+@parameterized_class(
+    ("org_payload", "repos_payload", "expected_repos", "apache2_repos"),
+    TEST_PAYLOAD
+)
+class TestIntegrationGithubOrgClient(unittest.TestCase):
+    """Integration tests for GithubOrgClient.public_repos with fixture payloads."""
+
+    @classmethod
+    def setUpClass(cls):
+        """Start patching requests.get and provide side_effect with fixture payloads."""
+        cls.get_patcher = patch("requests.get")
+        cls.mock_get = cls.get_patcher.start()
+
+        def side_effect(url):
+            if url == "https://api.github.com/orgs/google":
+                return MockResponse(cls.org_payload)
+            elif url == cls.org_payload["repos_url"]:
+                return MockResponse(cls.repos_payload)
+            raise ValueError(f"Unhandled URL: {url}")
+
+        cls.mock_get.side_effect = side_effect
+
+    @classmethod
+    def tearDownClass(cls):
+        """Stop patcher after all tests."""
+        cls.get_patcher.stop()
+
+    def test_public_repos(self):
+        """Test public_repos returns expected list of repos."""
+        client = GithubOrgClient("google")
+        self.assertEqual(client.public_repos(), self.expected_repos)
+
+    def test_public_repos_with_license(self):
+        """Test public_repos filters repos by license."""
+        client = GithubOrgClient("google")
+        result = client.public_repos(license="apache-2.0")
+        self.assertEqual(result, self.apache2_repos)
