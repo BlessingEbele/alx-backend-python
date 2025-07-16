@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Generic utilities for GitHub org client."""
 
+import requests
 from functools import wraps
 from typing import Mapping, Sequence, Any, Dict, Callable
 
