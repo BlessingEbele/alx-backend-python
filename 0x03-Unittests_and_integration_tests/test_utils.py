@@ -4,6 +4,8 @@
 import unittest
 from parameterized import parameterized
 from utils import access_nested_map
+import utils
+from unittest.mock import patch, mock 
 
 
 class TestAccessNestedMap(unittest.TestCase):
@@ -44,10 +46,6 @@ class TestAccessNestedMap(unittest.TestCase):
 """
 Test utils module
 """
-import unittest
-from unittest.mock import patch, Mock
-from parameterized import parameterized
-import utils
 
 
 class TestGetJson(unittest.TestCase):
@@ -110,3 +108,4 @@ class TestMemoize(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+    
