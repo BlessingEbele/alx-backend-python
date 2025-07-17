@@ -14,7 +14,7 @@ class MockResponse:
         """
         Initialize MockResponse with a payload.
 
-        Args: 
+        Args:
             payload  (Any): The fake Json data to return.
         """
         self._payload = payload
