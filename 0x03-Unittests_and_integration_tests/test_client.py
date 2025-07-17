@@ -11,9 +11,21 @@ from fixtures import TEST_PAYLOAD
 class MockResponse:
     """Mock response object to simulate requests.get().json()."""
     def __init__(self, payload):
+        """
+        Initialize MockResponse with a payload.
+
+        Args: 
+            payload  (Any): The fake Json data to return.
+        """
         self._payload = payload
 
     def json(self):
+        """
+        Return the stored payload as if from requests.Response.json().
+
+        Returns:
+            The fake JSON payload.
+        """
         return self._payload
 
 
