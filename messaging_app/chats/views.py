@@ -55,7 +55,13 @@ class MessageViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(message)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+#new message views
+
 from rest_framework.permissions import IsAuthenticated
+from rest_framework import generics
+from .models import Message
+from .permissions import IsParticipantOrSender
+
 
 class MessageListView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
@@ -64,3 +70,23 @@ class MessageListView(generics.ListAPIView):
     def get_queryset(self):
         # Return only messages for the logged-in user
         return Message.objects.filter(sender=self.request.user)
+
+class MessageListCreateView(generics.ListCreateAPIView):
+    serializer_class = MessageSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return Message.objects.filter(sender=user) | Message.objects.filter(receiver=user)
+
+    def perform_create(self, serializer):
+        serializer.save(sender=self.request.user)
+
+from .models import Conversation
+
+class ConversationListView(generics.ListAPIView):
+    serializer_class = ConversationSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Conversation.objects.filter(participants=self.request.user)
