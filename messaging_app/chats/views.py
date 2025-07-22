@@ -109,11 +109,11 @@ class MessageViewSet(viewsets.ModelViewSet):
     def perform_update(self, serializer):
         instance = self.get_object()
         if not self.check_object_permissions(self.request, instance):
-            raise PermissionDenied(detail="You cannot edit this message")
+            return Response({"detail": "Forbidden"}, status=HTTP_403_FORBIDDEN)  # 👈 Explicit 403
         serializer.save()
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         if not self.check_object_permissions(request, instance):
-            raise PermissionDenied(detail="You cannot delete this message")
+            return Response({"detail": "Forbidden"}, status=HTTP_403_FORBIDDEN)  # 👈 Explicit 403
         return super().destroy(request, *args, **kwargs)
