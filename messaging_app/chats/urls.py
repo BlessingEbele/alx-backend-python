@@ -16,5 +16,4 @@ urlpatterns = [
     path('messages/', MessageListCreateView.as_view(), name='message_list_create'),
     path('conversations/', ConversationListView.as_view(), name='conversation_list'),
 ]
-]
 
