@@ -54,3 +54,13 @@ class MessageViewSet(viewsets.ModelViewSet):
         )
         serializer = self.get_serializer(message)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+from rest_framework.permissions import IsAuthenticated
+
+class MessageListView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = MessageSerializer
+
+    def get_queryset(self):
+        # Return only messages for the logged-in user
+        return Message.objects.filter(sender=self.request.user)
