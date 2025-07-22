@@ -90,3 +90,19 @@ class ConversationListView(generics.ListAPIView):
 
     def get_queryset(self):
         return Conversation.objects.filter(participants=self.request.user)
+    
+
+from .permissions import IsParticipantOfConversation
+
+class MessageViewSet(viewsets.ModelViewSet):
+    queryset = Message.objects.all()
+    serializer_class = MessageSerializer
+    permission_classes = [IsParticipantOfConversation]
+
+    def get_queryset(self):
+        user = self.request.user
+        return Message.objects.filter(sender=user) | Message.objects.filter(receiver=user)
+
+    def perform_create(self, serializer):
+        serializer.save(sender=self.request.user)
+
