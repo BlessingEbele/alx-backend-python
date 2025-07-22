@@ -93,11 +93,15 @@ class ConversationListView(generics.ListAPIView):
     
 
 from .permissions import IsParticipantOfConversation
+from django_filters.rest_framework import DjangoFilterBackend
+from messaging_app.filters import MessageFilter 
 
 class MessageViewSet(viewsets.ModelViewSet):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
     permission_classes = [IsParticipantOfConversation]
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = MessageFilter
 
     def get_queryset(self):
         user = self.request.user
