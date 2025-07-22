@@ -21,24 +21,27 @@ class IsParticipantOrSender(permissions.BasePermission):
             return request.user in obj.participants.all()
 
         return False
-    
+
+
 class IsParticipantOfConversation(permissions.BasePermission):
     """
-    Custom permission:
-    - Allow only authenticated users
-    - Allow only conversation participants to send, view, update, or delete messages
+    Allow only participants in a conversation to perform safe/unsafe actions.
+    Applies to:
+    - Message: sender or receiver
+    - Conversation: user in participants
     """
 
     def has_permission(self, request, view):
         return request.user and request.user.is_authenticated
 
     def has_object_permission(self, request, view, obj):
-        # Message has sender & receiver
-        if hasattr(obj, 'sender') and hasattr(obj, 'receiver'):
-            return obj.sender == request.user or obj.receiver == request.user
+        # Check object-level permissions for unsafe methods
+        if request.method in ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']:
+            if hasattr(obj, 'sender') and hasattr(obj, 'receiver'):
+                return obj.sender == request.user or obj.receiver == request.user
 
-        # Conversation has participants
-        if hasattr(obj, 'participants'):
-            return request.user in obj.participants.all()
+            if hasattr(obj, 'participants'):
+                return request.user in obj.participants.all()
 
+        # Default deny for unsupported types
         return False
