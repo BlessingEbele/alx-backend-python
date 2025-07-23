@@ -61,6 +61,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import generics
 from .models import Message
 from .permissions import IsParticipantOrSender
+from rest_framework.filters import OrderingFilter
+from rest_framework.exceptions import PermissionDenied
+from django_filters.rest_framework import DjangoFilterBackend
+from .permissions import IsParticipantOfConversation
+
 
 
 class MessageListView(generics.ListAPIView):
@@ -99,25 +104,29 @@ from messaging_app.filters import MessageFilter
 class MessageViewSet(viewsets.ModelViewSet):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
-    permission_classes = [IsParticipantOfConversation]
-    filter_backends = [DjangoFilterBackend]
+    permission_classes = [IsAuthenticated, IsParticipantOfConversation]
+    filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_class = MessageFilter
+    ordering_fields = ['sent_at']
 
     def get_queryset(self):
         user = self.request.user
-        return Message.objects.filter(sender=user) | Message.objects.filter(receiver=user)
+        return Message.objects.filter(conversation__participants=user)
 
     def perform_create(self, serializer):
+        conversation = serializer.validated_data.get("conversation")
+        if self.request.user not in conversation.participants.all():
+            raise PermissionDenied("You are not a participant of this conversation.")
         serializer.save(sender=self.request.user)
-    
+
     def perform_update(self, serializer):
         instance = self.get_object()
-        if not self.check_object_permissions(self.request, instance):
-            return Response({"detail": "Forbidden"}, status=HTTP_403_FORBIDDEN)  # 👈 Explicit 403
+        if self.request.user not in instance.conversation.participants.all():
+            raise PermissionDenied("You are not allowed to edit this message.")
         serializer.save()
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        if not self.check_object_permissions(request, instance):
-            return Response({"detail": "Forbidden"}, status=HTTP_403_FORBIDDEN)  # 👈 Explicit 403
+        if self.request.user not in instance.conversation.participants.all():
+            raise PermissionDenied("You are not allowed to delete this message.")
         return super().destroy(request, *args, **kwargs)
