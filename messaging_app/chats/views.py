@@ -6,6 +6,8 @@ from rest_framework.response import Response
 from .models import Conversation, Message, CustomUser
 from .serializers import ConversationSerializer, MessageSerializer
 from django.shortcuts import get_object_or_404
+from rest_framework.status import HTTP_403_FORBIDDEN  # ✅ required
+
 
 class ConversationViewSet(viewsets.ModelViewSet):
     queryset = Conversation.objects.all()
@@ -121,12 +123,12 @@ class MessageViewSet(viewsets.ModelViewSet):
 
     def perform_update(self, serializer):
         instance = self.get_object()
-        if self.request.user not in instance.conversation.participants.all():
-            raise PermissionDenied("You are not allowed to edit this message.")
+        if not self.check_object_permissions(self.request, instance):
+            return Response({"detail": "Forbidden"}, status=HTTP_403_FORBIDDEN)  # ✅
         serializer.save()
 
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        if self.request.user not in instance.conversation.participants.all():
-            raise PermissionDenied("You are not allowed to delete this message.")
-        return super().destroy(request, *args, **kwargs)
+def destroy(self, request, *args, **kwargs):
+    instance = self.get_object()
+    if not self.check_object_permissions(request, instance):
+        return Response({"detail": "Forbidden"}, status=HTTP_403_FORBIDDEN)  # ✅
+    return super().destroy(request, *args, **kwargs)
