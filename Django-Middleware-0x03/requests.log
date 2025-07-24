@@ -7,3 +7,10 @@ Not Found: /favicon.ico
 2025-07-24 12:28:21.107877 - User: Anonymous - Path: /api/conversations/
 2025-07-24 12:28:45.525856 - User: Anonymous - Path: /api/messages/
 Forbidden: /api/messages/
+2025-07-24 12:35:22.178312 - User: Anonymous - Path: /
+2025-07-24 12:43:08.191715 - User: Anonymous - Path: /api/conversations/
+2025-07-24 12:43:43.472500 - User: Anonymous - Path: /api/chats/
+Forbidden: /api/chats/
+2025-07-24 12:44:02.254786 - User: Anonymous - Path: /api/chats/
+Forbidden: /api/chats/
+C:\Users\princ\alx-backend-python\Django-Middleware-0x03\chats\middleware.py changed, reloading.
