@@ -86,3 +86,30 @@ class OffensiveLanguageMiddleware:
         else:
             ip = request.META.get('REMOTE_ADDR')
         return ip
+
+class RolePermissionMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        protected_prefixes = ['/api/chats/messages/', '/api/chats/conversations/']
+        method_restricted = ['POST', 'PUT', 'DELETE', 'PATCH']
+
+        # Only restrict if method is sensitive
+        if request.method in method_restricted:
+            if any(request.path.startswith(prefix) for prefix in protected_prefixes):
+                user = getattr(request, 'user', None)
+
+                if not user or not user.is_authenticated:
+                    return JsonResponse({"error": "Authentication required."}, status=403)
+
+                # Assuming role is stored as user.role
+                user_role = getattr(user, 'role', None)
+
+                if user_role not in ['admin', 'moderator']:
+                    return JsonResponse(
+                        {"error": "Permission denied. Admin or moderator role required."},
+                        status=403
+                    )
+
+        return self.get_response(request)
