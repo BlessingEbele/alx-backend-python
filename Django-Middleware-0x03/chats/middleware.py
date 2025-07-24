@@ -4,6 +4,7 @@ from datetime import datetime, time
 import logging
 import os
 from django.http import HttpResponseForbidden
+from Django-Middleware-0x03.messaging_app import settings.py 
 
 # Set up logger
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
