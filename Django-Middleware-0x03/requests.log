@@ -141,3 +141,8 @@ Forbidden: /api/messages/
 C:\Users\princ\alx-backend-python\Django-Middleware-0x03\chats\middleware.py changed, reloading.
 2025-07-24 19:26:32.276415 - User: Anonymous - Path: /api/messages/
 Forbidden: /api/messages/
+C:\Users\princ\alx-backend-python\Django-Middleware-0x03\messaging_app\settings.py changed, reloading.
+2025-07-24 20:14:16.553799 - User: Anonymous - Path: /api/messages/
+Forbidden: /api/messages/
+C:\Users\princ\alx-backend-python\Django-Middleware-0x03\messaging_app\settings.py changed, reloading.
+2025-07-24 20:19:14.078956 - User: Anonymous - Path: /api/token/
