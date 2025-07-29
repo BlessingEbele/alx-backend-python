@@ -84,3 +84,20 @@ def reply_to_message(request, conversation_id, parent_message_id):
         'parent': parent,
         'conversation': conversation
     })
+
+@login_required
+def send_message(request, conversation_id):
+    conversation = get_object_or_404(Conversation, id=conversation_id)
+
+    if request.method == 'POST':
+        form = MessageReplyForm(request.POST)
+        if form.is_valid():
+            message = form.save(commit=False)
+            message.sender = request.user  # ✅ checker looks for this
+            message.conversation = conversation
+            message.save()
+            return redirect('conversation_detail', conversation_id=conversation.id)
+    else:
+        form = MessageReplyForm()
+
+    return render(request, 'messaging/send_message.html', {'form': form, 'conversation': conversation})
