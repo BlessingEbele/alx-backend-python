@@ -1,17 +1,35 @@
 from django.db import models
-
-# Create your models here.
-from django.db import models
 from django.contrib.auth.models import User
+
+class Conversation(models.Model):
+    participants = models.ManyToManyField(User)
+    topic = models.CharField(max_length=255, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Conversation {self.pk}"
+
 
 class Message(models.Model):
     sender = models.ForeignKey(User, related_name='sent_messages', on_delete=models.CASCADE)
     receiver = models.ForeignKey(User, related_name='received_messages', on_delete=models.CASCADE)
+    conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, null=True)
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
+    edited = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'Message from {self.sender} to {self.receiver}'
+        return f'{self.sender}: {self.content[:30]}'
+
+
+class MessageHistory(models.Model):
+    message = models.ForeignKey(Message, on_delete=models.CASCADE, related_name='history')
+    old_content = models.TextField()
+    edited_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'History of Message ID {self.message.id} edited at {self.edited_at}'
+
 
 class Notification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)  # receiver
