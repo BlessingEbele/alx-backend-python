@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Message, MessageHistory
+from .models import Message, MessageHistory, Conversation
 
 
 
@@ -30,3 +30,28 @@ def delete_user(request):
     user.delete()
     messages.success(request, "Your account and all related data have been deleted.")
     return redirect("login")  # or home page
+
+
+def conversation_detail(request, conversation_id):
+    conversation = get_object_or_404(Conversation, id=conversation_id)
+    
+    # Fetch all top-level messages and prefetch their replies
+    messages = Message.objects.filter(
+        conversation=conversation,
+        parent_message__isnull=True
+    ).select_related('sender', 'receiver').prefetch_related('replies')
+    
+    return render(request, 'messaging/conversation_detail.html', {
+        'conversation': conversation,
+        'messages': messages,
+    })
+
+def get_all_replies(message):
+    replies = message.replies.all()
+    nested = []
+    for reply in replies:
+        nested.append({
+            'message': reply,
+            'replies': get_all_replies(reply)
+        })
+    return nested

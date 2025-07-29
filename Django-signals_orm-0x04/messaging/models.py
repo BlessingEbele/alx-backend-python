@@ -6,6 +6,15 @@ class Conversation(models.Model):
     topic = models.CharField(max_length=255, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    parent_message = models.ForeignKey(
+        'self',
+        null=True,
+        blank=True,
+        related_name='replies',
+        on_delete=models.CASCADE
+    )
+
+
     def __str__(self):
         return f"Conversation {self.pk}"
 
