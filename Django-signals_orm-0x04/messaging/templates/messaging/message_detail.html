@@ -33,22 +33,3 @@
     <button type="submit" class="btn btn-danger">Delete My Account</button>
 </form>
 
-<!-- templates/messaging/conversation_detail.html -->
-
-<h2>Conversation {{ conversation.id }}</h2>
-
-{% for message in messages %}
-  <div style="margin-bottom: 10px;">
-    <strong>{{ message.sender.username }}</strong>: {{ message.content }} <br>
-    <small>{{ message.timestamp }}</small>
-
-    {% if message.replies.all %}
-      <div style="margin-left: 30px;">
-        {% for reply in message.replies.all %}
-          <strong>{{ reply.sender.username }}</strong>: {{ reply.content }} <br>
-          <small>{{ reply.timestamp }}</small>
-        {% endfor %}
-      </div>
-    {% endif %}
-  </div>
-{% endfor %}

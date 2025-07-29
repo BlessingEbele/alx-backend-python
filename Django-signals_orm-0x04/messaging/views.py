@@ -55,3 +55,28 @@ def get_all_replies(message):
             'replies': get_all_replies(reply)
         })
     return nested
+
+from .forms import MessageReplyForm
+
+def reply_to_message(request, conversation_id, parent_message_id):
+    parent = get_object_or_404(Message, id=parent_message_id)
+    conversation = get_object_or_404(Conversation, id=conversation_id)
+
+    if request.method == 'POST':
+        form = MessageReplyForm(request.POST)
+        if form.is_valid():
+            reply = form.save(commit=False)
+            reply.sender = request.user
+            reply.receiver = parent.sender  # optional, adjust logic
+            reply.conversation = conversation
+            reply.parent_message = parent
+            reply.save()
+            return redirect('conversation_detail', conversation_id=conversation.id)
+    else:
+        form = MessageReplyForm()
+
+    return render(request, 'messaging/reply_form.html', {
+        'form': form,
+        'parent': parent,
+        'conversation': conversation
+    })
