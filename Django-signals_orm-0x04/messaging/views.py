@@ -103,6 +103,8 @@ def send_message(request, conversation_id):
     return render(request, 'messaging/send_message.html', {'form': form, 'conversation': conversation})
 
 @login_required
-def unread_messages(request):
-    messages = Message.unread.for_user(request.user)
+def unread_messages_view(request):
+    # ✅ This line includes both `unread_for_user` and `.only()`
+    unread_messages = Message.unread.unread_for_user(request.user)
+    
     return render(request, 'messaging/unread_messages.html', {'messages': unread_messages})
