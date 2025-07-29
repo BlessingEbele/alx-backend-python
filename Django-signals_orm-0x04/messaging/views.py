@@ -23,6 +23,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import redirect
 from django.contrib import messages
+from .forms import MessageReplyForm
 
 @login_required
 def delete_user(request):
@@ -36,14 +37,17 @@ def conversation_detail(request, conversation_id):
     conversation = get_object_or_404(Conversation, id=conversation_id)
     
     # Fetch all top-level messages and prefetch their replies
-    messages = Message.objects.filter(
-        conversation=conversation,
-        parent_message__isnull=True
-    ).select_related('sender', 'receiver').prefetch_related('replies')
+    # Optimize DB queries
+    messages = Message.objects.filter(conversation=conversation, parent_message__isnull=True) \
+        .select_related('sender', 'receiver') \
+        .prefetch_related('history', 'replies')
+
+    form = MessageReplyForm()
     
     return render(request, 'messaging/conversation_detail.html', {
         'conversation': conversation,
         'messages': messages,
+        'form': form  
     })
 
 def get_all_replies(message):
@@ -56,7 +60,7 @@ def get_all_replies(message):
         })
     return nested
 
-from .forms import MessageReplyForm
+
 
 def reply_to_message(request, conversation_id, parent_message_id):
     parent = get_object_or_404(Message, id=parent_message_id)

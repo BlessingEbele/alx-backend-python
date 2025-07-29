@@ -18,3 +18,19 @@
     {% endif %}
   </div>
 {% endfor %}
+
+
+{% for message in messages %}
+    <div>
+        <strong>{{ message.sender }}:</strong> {{ message.content }}
+        <small>{{ message.timestamp }}</small>
+        <a href="{% url 'reply_to_message' conversation.id message.id %}">Reply</a>
+
+        {% for reply in message.replies.all %}
+            <div style="margin-left: 30px;">
+                <strong>{{ reply.sender }}:</strong> {{ reply.content }}
+                <small>{{ reply.timestamp }}</small>
+            </div>
+        {% endfor %}
+    </div>
+{% endfor %}
