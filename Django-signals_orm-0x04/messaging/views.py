@@ -24,6 +24,8 @@ from django.contrib.auth.models import User
 from django.shortcuts import redirect
 from django.contrib import messages
 from .forms import MessageReplyForm
+from django.views.decorators.cache import cache_page
+from messaging.models import Conversation, Message
 
 @login_required
 def delete_user(request):
@@ -108,3 +110,9 @@ def unread_messages_view(request):
     unread_messages = Message.unread.unread_for_user(request.user)
     
     return render(request, 'messaging/unread_messages.html', {'messages': unread_messages})
+
+@cache_page(60)  # Cache for 60 seconds
+def conversation_detail_view(request, conversation_id):
+    conversation = get_object_or_404(Conversation, id=conversation_id)
+    messages = Message.objects.filter(conversation=conversation).select_related('sender', 'receiver')
+    return render(request, 'messaging/conversation_detail.html', {'conversation': conversation, 'messages': messages})
