@@ -105,4 +105,4 @@ def send_message(request, conversation_id):
 @login_required
 def unread_messages(request):
     messages = Message.unread.for_user(request.user)
-    return render(request, 'messaging/unread_messages.html', {'messages': messages})
+    return render(request, 'messaging/unread_messages.html', {'messages': unread_messages})
