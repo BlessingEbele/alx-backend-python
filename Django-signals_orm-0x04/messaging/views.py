@@ -101,3 +101,8 @@ def send_message(request, conversation_id):
         form = MessageReplyForm()
 
     return render(request, 'messaging/send_message.html', {'form': form, 'conversation': conversation})
+
+@login_required
+def unread_messages(request):
+    messages = Message.unread.for_user(request.user)
+    return render(request, 'messaging/unread_messages.html', {'messages': messages})
