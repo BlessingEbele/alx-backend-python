@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+import os
 from pathlib import Path
 from rest_framework.pagination import PageNumberPagination  # 👈 Required for checker
 from datetime import timedelta
@@ -82,10 +82,15 @@ WSGI_APPLICATION = 'messaging_app.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'messaging_db',
+        'USER': 'messaging_user',
+        'PASSWORD': 'messaging_pass',
+        'HOST': 'db',  # This MUST match the name of the db service in docker-compose.yml
+        'PORT': '5432',
     }
 }
+
 
 
 # Password validation
