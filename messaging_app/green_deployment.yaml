@@ -34,3 +34,23 @@ spec:
       port: 8000
       targetPort: 8000
   type: ClusterIP
+
+
+metadata:
+  name: django-blue
+spec:
+  template:
+    spec:
+      containers:
+      - name: django-container
+        image: your-dockerhub-username/django-app:v1
+ 
+metadata:
+  name: django-green
+spec:
+  template:
+    spec:
+      containers:
+      - name: django-container
+        image: your-dockerhub-username/django-app:v2
+
