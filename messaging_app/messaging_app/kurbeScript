@@ -26,7 +26,7 @@ if minitube status | grep -q "host: Running"; then
     echo "⚠️  Miniktube cluster is already running."
 else
     echo "🚀 Starting Minitube cluster..."
-    minitube start
+    minikube start
 fi
 
 # Step 4: Verify cluster info
