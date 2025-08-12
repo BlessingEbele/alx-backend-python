@@ -1,0 +1,14 @@
+# Enable Nginx ingress
+minikube addons enable ingress
+
+# Verify ingress controller pods
+kubectl get pods -n kube-system
+
+# Add host mapping
+echo "$(minikube ip) django.local" | sudo tee -a /etc/hosts
+
+# Apply ingress configuration
+kubectl apply -f messaging_app/ingress.yaml
+
+# Verify ingress
+kubectl get ingress
