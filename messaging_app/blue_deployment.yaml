@@ -43,4 +43,4 @@ spec:
     spec:
       containers:
       - name: django-container
-        image: your-dockerhub-username/django-app:v1
+        image: your-dockerhub-username/django-app:v2
