@@ -4,12 +4,12 @@
 # Blessing Ebele - ALX Backend Python
 
 # Step 1: Check if Minitube is installed
-if ! command -v minitube &> /dev/null; then
-    echo "❌ Minitube is not installed. Please install it before running this script."
-    echo "🔗 https://minitube.sigs.k8s.io/docs/start/"
+if ! command -v minikube &> /dev/null; then
+    echo "❌ Minikube is not installed. Please install it before running this script."
+    echo "🔗 https://minikube.sigs.k8s.io/docs/start/"
     exit 1
 else
-    echo "✅ Minitube is installed."
+    echo "✅ Minikube is installed."
 fi
 
 # Step 2: Check if kubectl is installed
@@ -23,9 +23,9 @@ fi
 
 # Step 3: Check if cluster is already running
 if minitube status | grep -q "host: Running"; then
-    echo "⚠️  Miniktube cluster is already running."
+    echo "⚠️  Miniktbe cluster is already running."
 else
-    echo "🚀 Starting Minitube cluster..."
+    echo "🚀 Starting Minikube cluster..."
     minikube start
 fi
 
