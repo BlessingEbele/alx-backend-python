@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# Script: kubctl-0x01
+# Objective: Scale Django app to 3 replicas, verify, load test, and monitor resources.
+
+DEPLOYMENT_NAME="django-messaging-deployment"
+SERVICE_NAME="django-messaging-service"
+NAMESPACE="default"  # Change if you deployed in another namespace
+
+# Step 1: Scale the deployment to 3 replicas
+echo "📦 Scaling deployment '$DEPLOYMENT_NAME' to 3 replicas..."
+kubectl scale deployment $DEPLOYMENT_NAME --replicas=3 -n $NAMESPACE
+
+# Step 2: Verify pods
+echo "🔍 Checking running pods..."
+kubectl get pods -n $NAMESPACE -o wide
+
+# Step 3: Get ClusterIP for the service
+CLUSTER_IP=$(kubectl get svc $SERVICE_NAME -n $NAMESPACE -o jsonpath='{.spec.clusterIP}')
+SERVICE_PORT=$(kubectl get svc $SERVICE_NAME -n $NAMESPACE -o jsonpath='{.spec.ports[0].port}')
+
+echo "🌐 Service is accessible at: http://$CLUSTER_IP:$SERVICE_PORT (ClusterIP - internal only)"
+
+# Step 4: Load testing with wrk
+echo "🚀 Running load test with wrk..."
+wrk -t4 -c50 -d10s http://$CLUSTER_IP:$SERVICE_PORT/ || echo "⚠️ wrk failed - ensure wrk is installed and service is reachable internally"
+
+# Step 5: Monitor resource usage
+echo "📊 Resource usage:"
+kubectl top pods -n $NAMESPACE || echo "⚠️ Metrics server not installed or configured."
