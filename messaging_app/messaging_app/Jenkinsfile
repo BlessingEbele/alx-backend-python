@@ -1,0 +1,49 @@
+pipeline {
+    agent any
+
+    environment {
+        // Use GitHub credentials securely
+        GITHUB_CREDENTIALS = credentials('github-credentials')
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Clone repo from GitHub
+                git credentialsId: 'github-credentials', 
+                    url: 'https://github.com/your-username/alx-backend-python.git', 
+                    branch: 'main'
+            }
+        }
+
+        stage('Setup Python') {
+            steps {
+                // Use ShiningPanda to create a virtualenv
+                sh '''
+                python3 -m venv venv
+                . venv/bin/activate
+                pip install --upgrade pip
+                pip install -r messaging_app/requirements.txt
+                '''
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                sh '''
+                . venv/bin/activate
+                pytest --junitxml=report.xml
+                '''
+            }
+            post {
+                always {
+                    junit 'report.xml'  // publish test results
+                }
+            }
+        }
+    }
+
+    triggers {
+        // Manual trigger only (no auto builds yet)
+    }
+}
