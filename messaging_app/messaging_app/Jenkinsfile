@@ -6,8 +6,8 @@ pipeline {
             steps {
                 // Clone the repo with GitHub credentials
                 git branch: 'main',
-                    credentialsId: 'github-credentials',
-                    url: 'https://github.com/your-username/alx-backend-python.git'
+                    credentialsId: 'blessingebele',
+                    url: 'https://github.com/blessingebele/alx-backend-python.git'
             }
         }
 
