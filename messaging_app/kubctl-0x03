@@ -1,0 +1,28 @@
+#!/bin/bash
+set -e
+
+# Step 1: Apply the updated deployment to trigger rolling update
+echo "Applying blue_deployment.yaml..."
+kubectl apply -f messaging_app/blue_deployment.yaml
+
+# Step 2: Monitor the rollout progress
+echo "Monitoring rollout status..."
+kubectl rollout status deployment/blue-deployment
+
+# Step 3: Test app availability during rollout
+echo "Testing application availability..."
+for i in {1..20}
+do
+    curl -s http://<YOUR-SERVICE-IP>:<PORT> > /dev/null
+    if [ $? -ne 0 ]; then
+        echo "⚠️  Possible downtime detected!"
+    else
+        echo "✅ App responded successfully"
+    fi
+    sleep 2
+done
+
+# Step 4: Verify current pods
+echo "Current running pods:"
+kubectl get pods -o wide
+

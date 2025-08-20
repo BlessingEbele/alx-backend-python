@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 asgiref==3.9.1
 Django==5.2.4
 django-cors-headers==4.7.0
@@ -6,3 +7,16 @@ drf-nested-routers==0.94.2
 pillow==11.3.0
 sqlparse==0.5.3
 tzdata==2025.2
+=======
+asgiref==3.8.1
+Django==4.2.23
+django-cors-headers==4.4.0
+django-filter==25.1
+djangorestframework==3.15.2
+djangorestframework_simplejwt==5.5.1
+drf-nested-routers==0.94.2
+psycopg2-binary==2.9.10
+PyJWT==2.10.1
+sqlparse==0.5.3
+typing_extensions==4.13.2
+>>>>>>> 7f8f6e2301421421684bf67cf9cab94c11195f2d

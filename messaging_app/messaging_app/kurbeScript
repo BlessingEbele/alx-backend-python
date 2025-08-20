@@ -1,0 +1,38 @@
+#!/bin/bash
+
+# kurbeScript - Sets up a local Kubernetes cluster with Minitube
+# Blessing Ebele - ALX Backend Python
+
+# Step 1: Check if Minitube is installed
+if ! command -v minikube &> /dev/null; then
+    echo "❌ Minikube is not installed. Please install it before running this script."
+    echo "🔗 https://minikube.sigs.k8s.io/docs/start/"
+    exit 1
+else
+    echo "✅ Minikube is installed."
+fi
+
+# Step 2: Check if kubectl is installed
+if ! command -v kubectl &> /dev/null; then
+    echo "❌ kubectl is not installed. Please install it before running this script."
+    echo "🔗 https://kubernetes.io/docs/tasks/tools/"
+    exit 1
+else
+    echo "✅ kubectl is installed."
+fi
+
+# Step 3: Check if cluster is already running
+if minitube status | grep -q "host: Running"; then
+    echo "⚠️  Miniktbe cluster is already running."
+else
+    echo "🚀 Starting Minikube cluster..."
+    minikube start
+fi
+
+# Step 4: Verify cluster info
+echo "📡 Checking cluster info..."
+kubectl cluster-info
+
+# Step 5: List available pods
+echo "📦 Listing available pods..."
+kubectl get pods --all-namespaces
