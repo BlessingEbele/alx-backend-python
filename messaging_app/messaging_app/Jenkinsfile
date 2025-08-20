@@ -4,8 +4,9 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Clone the repo and specify branch
+                // Clone the repo with GitHub credentials
                 git branch: 'main',
+                    credentialsId: 'github-credentials',
                     url: 'https://github.com/your-username/alx-backend-python.git'
             }
         }
@@ -37,6 +38,6 @@ pipeline {
     }
 
     triggers {
-        // Only manual trigger for now
+        // Manual trigger only
     }
 }
